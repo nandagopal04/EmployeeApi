@@ -9,6 +9,6 @@ import com.chs.entity.Department;
 import com.chs.entity.Employee;
 
 @Repository
-public interface EmployeeRepo extends JpaRepository<Employee, Integer> {
+public interface EmployeeRepo extends JpaRepository<Employee, Long> {
 	List<Employee> findAllByDepartment(Department department);
 }

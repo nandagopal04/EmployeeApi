@@ -2,13 +2,13 @@ package com.chs.service;
 
 import java.util.List;
 
-import com.chs.entity.Department;
+import com.chs.dto.DepartmentDto;
 import com.chs.exception.InvalidDepartmentIdExpception;
 
 public interface DepartmentService{
-	Department saveDepartment(Department department);
-	Department getDepartmentById(int id) throws InvalidDepartmentIdExpception;
-	Department editDepartment(Department department) throws InvalidDepartmentIdExpception;
-	Department deleteDepartment(int id) throws InvalidDepartmentIdExpception;
-	List<Department> getAllDepartments();
+	DepartmentDto saveDepartment(DepartmentDto departmentDto);
+	DepartmentDto getDepartmentById(Long id) throws InvalidDepartmentIdExpception;
+	DepartmentDto editDepartment(DepartmentDto departmentDto) throws InvalidDepartmentIdExpception;
+	DepartmentDto deleteDepartment(Long id) throws InvalidDepartmentIdExpception;
+	List<DepartmentDto> getAllDepartments();
 }

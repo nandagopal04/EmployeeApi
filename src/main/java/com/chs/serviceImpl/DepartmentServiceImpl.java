@@ -2,60 +2,75 @@ package com.chs.serviceImpl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chs.converter.DepartmentConverter;
+import com.chs.dto.DepartmentDto;
 import com.chs.entity.Department;
 import com.chs.exception.InvalidDepartmentIdExpception;
 import com.chs.repo.DepartmentRepo;
 import com.chs.service.DepartmentService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 	
-	DepartmentRepo departmentRepo;
-
 	@Autowired
-	public void setDepartmentRepo(DepartmentRepo departmentRepo) {
-		this.departmentRepo = departmentRepo;
-	}
-
-	public DepartmentServiceImpl(DepartmentRepo departmentRepo) {
-		super();
-		this.departmentRepo = departmentRepo;
-	}
-
-	public DepartmentServiceImpl() {
-		super();
-		// TODO Auto-generated constructor stub
+	private DepartmentRepo departmentRepo;
+	
+	@Autowired
+	private DepartmentConverter departmentConverter;
+	
+	@Transactional
+	@Override
+	public DepartmentDto saveDepartment(DepartmentDto departmentDto) {
+		Department department = departmentConverter.convertDepartmentDtoToDepartment(departmentDto);
+		department = departmentRepo.save(department);
+		return departmentConverter.convertDepartmentToDepartmentDto(department);
 	}
 	
-	public Department saveDepartment(Department department) {
-		return departmentRepo.save(department);
-	}
 	@Override
-	public Department getDepartmentById(int id) throws InvalidDepartmentIdExpception {
+	public DepartmentDto getDepartmentById(Long id) throws InvalidDepartmentIdExpception {
 		Optional<Department> optDepartment = departmentRepo.findById(id);
 		if(!optDepartment.isPresent()) {
 			throw new InvalidDepartmentIdExpception("Invalid Department ID: "+id);
 		}
-		return optDepartment.get();
+		return departmentConverter.convertDepartmentToDepartmentDto(optDepartment.get());
 	}
+	
+	@Transactional
 	@Override
-	public Department editDepartment(Department department) throws InvalidDepartmentIdExpception {
-		getDepartmentById(department.getId());
-		return departmentRepo.save(department);
+	public DepartmentDto editDepartment(DepartmentDto departmentDto) throws InvalidDepartmentIdExpception {
+		Department department = departmentConverter.convertDepartmentDtoToDepartment(departmentDto);
+		if(!departmentRepo.existsById(department.getId())) {
+			throw new InvalidDepartmentIdExpception("Invalid department ID: "+department.getId());
+		}
+		department = departmentRepo.save(department);
+		return departmentConverter.convertDepartmentToDepartmentDto(department);
 	}
+	
+	@Transactional
 	@Override
-	public Department deleteDepartment(int id) throws InvalidDepartmentIdExpception{
-		Department department = getDepartmentById(id);
+	public DepartmentDto deleteDepartment(Long id) throws InvalidDepartmentIdExpception{
+		Department department = departmentConverter.convertDepartmentDtoToDepartment(getDepartmentById(id));
+		if(!departmentRepo.existsById(department.getId())) {
+			throw new InvalidDepartmentIdExpception("Invalid department ID: "+department.getId());
+		}
 		departmentRepo.delete(department);
-		return department;
+		return departmentConverter.convertDepartmentToDepartmentDto(department);
 	}
+	
 	@Override
-	public List<Department> getAllDepartments(){
-		return departmentRepo.findAll();
+	public List<DepartmentDto> getAllDepartments(){
+		List<Department> allDepartments = departmentRepo.findAll();
+		return allDepartments
+				.stream()
+				.map(departmentConverter::convertDepartmentToDepartmentDto)
+				.collect(Collectors.toList());
 	}
 
 }

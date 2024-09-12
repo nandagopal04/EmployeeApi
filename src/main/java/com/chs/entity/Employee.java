@@ -1,6 +1,10 @@
 package com.chs.entity;
 
 
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,29 +14,34 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="employee")
-public class Employee {
+public class Employee implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7172644531281241388L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int id;
+	Long id;
 	String name;
-	int salary;
+	Long salary;
 	@ManyToOne
+	@JsonIgnore
 	Department department;
 	public Employee() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Employee(int id, String name, int salary, Department department) {
+	public Employee(Long id, String name, Long salary, Department department) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.salary = salary;
 		this.department = department;
 	}
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -41,10 +50,10 @@ public class Employee {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getSalary() {
+	public Long getSalary() {
 		return salary;
 	}
-	public void setSalary(int salary) {
+	public void setSalary(Long salary) {
 		this.salary = salary;
 	}
 	public Department getDepartment() {

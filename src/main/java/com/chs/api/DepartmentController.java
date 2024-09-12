@@ -15,79 +15,66 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chs.entity.Department;
+import com.chs.dto.DepartmentDto;
 import com.chs.exception.InvalidDepartmentIdExpception;
 import com.chs.service.DepartmentService;
 
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
-	DepartmentService departmentService;
-
-	public DepartmentController() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public DepartmentController(DepartmentService departmentService) {
-		super();
-		this.departmentService = departmentService;
-	}
-
+	
 	@Autowired
-	public void setDepartmentService(DepartmentService departmentService) {
-		this.departmentService = departmentService;
-	}
+	DepartmentService departmentService;
 	
 	// save department
 	@PostMapping("/create")
-	public ResponseEntity<Department> saveDepartment(@RequestBody Department department){
-		Department savedDepartment = departmentService.saveDepartment(department);
-		ResponseEntity<Department> responseEntity = new ResponseEntity<>(savedDepartment, HttpStatus.CREATED);
+	public ResponseEntity<DepartmentDto> saveDepartment(@RequestBody DepartmentDto departmentDto){
+		DepartmentDto savedDepartment = departmentService.saveDepartment(departmentDto);
+		ResponseEntity<DepartmentDto> responseEntity = new ResponseEntity<>(savedDepartment, HttpStatus.CREATED);
 		return responseEntity;
 	}
 	
 	// find department by id
 	@GetMapping("/{id}")
-	public ResponseEntity<Department> findDepartmentById(@PathVariable int id) throws InvalidDepartmentIdExpception{
-		Department department = departmentService.getDepartmentById(id);
-		ResponseEntity<Department> responseEntity = new ResponseEntity<Department>(department, HttpStatus.OK);
+	public ResponseEntity<DepartmentDto> findDepartmentById(@PathVariable Long id) throws InvalidDepartmentIdExpception{
+		DepartmentDto departmentDto = departmentService.getDepartmentById(id);
+		ResponseEntity<DepartmentDto> responseEntity = new ResponseEntity<DepartmentDto>(departmentDto, HttpStatus.OK);
 		return responseEntity;
 	}
 	
 	// find all departments
 	@GetMapping("/get/all")
-	public ResponseEntity<List<Department>> findAllDepartments(){
-		List<Department> allDepartments = departmentService.getAllDepartments();
-		ResponseEntity<List<Department>> responseEntity = new ResponseEntity<List<Department>>(allDepartments, HttpStatus.OK);
+	public ResponseEntity<List<DepartmentDto>> findAllDepartments(){
+		List<DepartmentDto> allDepartments = departmentService.getAllDepartments();
+		ResponseEntity<List<com.chs.dto.DepartmentDto>> responseEntity = new ResponseEntity<List<DepartmentDto>>(allDepartments, HttpStatus.OK);
 		return responseEntity;
 	}
 	
 	// edit department
 	@PutMapping("/update")
-	public ResponseEntity<Department> editDepartment(@RequestBody Department department) throws InvalidDepartmentIdExpception{
-		Department editedDepartment = departmentService.editDepartment(department);
-		ResponseEntity<Department> responseEntity = new ResponseEntity<Department>(editedDepartment, HttpStatus.OK);
+	public ResponseEntity<DepartmentDto> editDepartment(@RequestBody DepartmentDto departmentDto) throws InvalidDepartmentIdExpception{
+		DepartmentDto editedDepartment = departmentService.editDepartment(departmentDto);
+		ResponseEntity<DepartmentDto> responseEntity = new ResponseEntity<DepartmentDto>(editedDepartment, HttpStatus.OK);
 		return responseEntity;
 	}
 	
 	// patch department
 	@PatchMapping("/patch")
-	public ResponseEntity<Department> patchDepartment(@RequestBody Department department) throws InvalidDepartmentIdExpception{
-		Department patchDepartment = departmentService.getDepartmentById(department.getId());
-		if(department.getName() != null) {
-			patchDepartment.setName(department.getName());
+	public ResponseEntity<DepartmentDto> patchDepartment(@RequestBody DepartmentDto departmentDto) throws InvalidDepartmentIdExpception{
+		DepartmentDto patchDepartmentDto = departmentService.getDepartmentById(departmentDto.getId());
+		if(departmentDto.getName() != null) {
+			patchDepartmentDto.setName(departmentDto.getName());
 		}
-		departmentService.editDepartment(patchDepartment);
-		ResponseEntity<Department> responseEntity = new ResponseEntity<Department>(patchDepartment, HttpStatus.OK);
+		departmentService.editDepartment(patchDepartmentDto);
+		ResponseEntity<DepartmentDto> responseEntity = new ResponseEntity<DepartmentDto>(patchDepartmentDto, HttpStatus.OK);
 		return responseEntity;
 	}
 	
 	// delete department
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Department> deleteDepartment(@PathVariable int id) throws InvalidDepartmentIdExpception{
-		Department deletedDepartment = departmentService.deleteDepartment(id);
-		ResponseEntity<Department> responseEntity = new ResponseEntity<Department>(deletedDepartment, HttpStatus.NO_CONTENT);
+	public ResponseEntity<DepartmentDto> deleteDepartment(@PathVariable Long id) throws InvalidDepartmentIdExpception{
+		DepartmentDto deletedDepartmentDto = departmentService.deleteDepartment(id);
+		ResponseEntity<DepartmentDto> responseEntity = new ResponseEntity<DepartmentDto>(deletedDepartmentDto, HttpStatus.NO_CONTENT);
 		return responseEntity;
 	}
 }

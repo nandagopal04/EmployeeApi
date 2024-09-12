@@ -1,5 +1,6 @@
 package com.chs.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -14,10 +15,14 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="department")
-public class Department {
+public class Department implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8565360193632071314L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	int id;
+	Long id;
 	String name;
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="department_id", referencedColumnName = "id")
@@ -26,10 +31,10 @@ public class Department {
 	public String toString() {
 		return "Department [id=" + id + ", name=" + name + "]";
 	}
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -38,7 +43,7 @@ public class Department {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Department(int id, String name) {
+	public Department(Long id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
